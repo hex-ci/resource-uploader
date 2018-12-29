@@ -2,6 +2,7 @@
 
 const yargs = require('yargs');
 const gulp = require('gulp');
+const path = require('path');
 const gulpLoadPlugins = require('gulp-load-plugins');
 const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
@@ -33,11 +34,7 @@ const argv = yargs.usage('用法: $0 文件 [选项]') // usage string of applic
   }).option('prefix', {
     alias: 'p',
     type: 'string',
-    description: '自定义 URL 前缀'
-  }).option('refresh', {
-    alias: 'r',
-    type: 'string',
-    description: '刷新 CDN 资源'
+    description: '自定义 URL 路径'
   }).option('name', {
     type: 'string',
     description: '自定义 URL 文件名'
@@ -52,6 +49,14 @@ const argv = yargs.usage('用法: $0 文件 [选项]') // usage string of applic
     type: 'boolean',
     default: false,
     description: '是否简化控制台输出'
+  }).option('concat', {
+    type: 'boolean',
+    default: false,
+    description: '是否合并文件'
+  }).option('refresh', {
+    alias: 'r',
+    type: 'string',
+    description: '刷新 CDN 资源'
   })
   .help('help')
   .version('version', '显示版本信息', version)
@@ -67,15 +72,18 @@ const showError = (event) => {
   console.log(event.message);
 };
 
-gulp.task('alioss', function(cb) {
-
-  const isMulti = (typeof argv._ === 'object' && argv._.length > 1);
-
-  if (isMulti && !argv.name) {
-    log('Please add --name');
-
-    return cb();
+const getConcatName = () => {
+  if (argv.name) {
+    return argv.name;
   }
+  else {
+    return 'all' + path.extname(argv._[0]);
+  }
+};
+
+gulp.task('alioss', (cb) => {
+
+  const isMulti = !!(argv.concat && typeof argv._ === 'object' && argv._.length > 1);
 
   const aliossOptions = {
     uriPrefix: argv.prefix || '',
@@ -137,7 +145,7 @@ gulp.task('alioss', function(cb) {
     if (!argv.compress) {
       const run = () => {
         return gulp.src(argv._)
-          .pipe($.if(isMulti, $.concat(argv.name || 'all')))
+          .pipe($.if(isMulti, $.concat(getConcatName())))
           .pipe($.if(/\.(png|jpg|jpeg|gif|svg)$/i, imagemin([
             imagemin.gifsicle({ interlaced: true, optimizationLevel: 3 }),
             imagemin.jpegtran({ progressive: true }),
@@ -167,7 +175,7 @@ gulp.task('alioss', function(cb) {
       const run = () => {
         return gulp.src(argv._)
           .pipe($.if(/\.(js|css|less|scss|sass)$/i, $.sourcemaps.init()))
-          .pipe($.if(isMulti, $.concat(argv.name || 'all')))
+          .pipe($.if(isMulti, $.concat(getConcatName())))
 
           .pipe($.if(/\.(htm|html)$/i, html()))
           .pipe($.if(/\.(htm|html)$/i, inlineCompress()))
@@ -252,6 +260,7 @@ gulp.task('alioss', function(cb) {
       }
     }
   }
+
 });
 
 if (argv._.length) {
