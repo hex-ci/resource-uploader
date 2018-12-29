@@ -3,6 +3,10 @@
 const yargs = require('yargs');
 const gulp = require('gulp');
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
+const process = require('process');
+const inquirer = require('inquirer');
 const gulpLoadPlugins = require('gulp-load-plugins');
 const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
@@ -57,6 +61,10 @@ const argv = yargs.usage('用法: $0 文件 [选项]') // usage string of applic
     alias: 'r',
     type: 'string',
     description: '刷新 CDN 资源'
+  }).option('init-config', {
+    type: 'boolean',
+    default: false,
+    description: '初始化配置文件'
   })
   .help('help')
   .version('version', '显示版本信息', version)
@@ -65,6 +73,9 @@ const argv = yargs.usage('用法: $0 文件 [选项]') // usage string of applic
   .locale('zh_CN')
   .argv;
 
+
+const homeDir = os.homedir();
+const configFile = path.join(homeDir, '.config', 'resource-uploader', 'config.json');
 
 const showError = (event) => {
   log(colors.red('error!'));
@@ -262,6 +273,81 @@ gulp.task('alioss', (cb) => {
   }
 
 });
+
+if (argv.initConfig) {
+  if (fs.existsSync(configFile)) {
+    fs.unlinkSync(configFile);
+  }
+}
+
+if (!fs.existsSync(configFile)) {
+  const questions = [
+    {
+      type: 'input',
+      name: 'accessKeyId',
+      message: '请输入阿里云 OSS AccessKeyId:',
+      validate: (value) => {
+        if (value.trim() != '') {
+          return true;
+        }
+
+        return '请输入 AccessKeyId';
+      }
+    },
+    {
+      type: 'input',
+      name: 'secretAccessKey',
+      message: '请输入阿里云 OSS AccessKeySecret:',
+      validate: (value) => {
+        if (value.trim() != '') {
+          return true;
+        }
+
+        return '请输入 AccessKeySecret';
+      }
+    },
+    {
+      type: 'input',
+      name: 'bucket',
+      message: '请输入阿里云 OSS Bucket 名称:',
+      validate: (value) => {
+        if (value.trim() != '') {
+          return true;
+        }
+
+        return '请输入 Bucket';
+      }
+    },
+    {
+      type: 'input',
+      name: 'urlPrefix',
+      message: '请输入阿里云 OSS 自定义域名(请按 http://domain.com/ 格式输入):',
+      validate: (value) => {
+        if (value.trim() != '') {
+          return true;
+        }
+
+        return '请输入自定义域名';
+      }
+    },
+  ];
+
+  inquirer.prompt(questions).then(answers => {
+    if (!fs.existsSync(path.join(homeDir, '.config'))) {
+      fs.mkdirSync(path.join(homeDir, '.config'))
+    }
+
+    if (!fs.existsSync(path.join(homeDir, '.config', 'resource-uploader'))) {
+      fs.mkdirSync(path.join(homeDir, '.config', 'resource-uploader'))
+    }
+
+    fs.writeFileSync(configFile, JSON.stringify({ alioss: answers }, null, '  '), { mode: 0o600 });
+
+    log(colors.cyan('config saved!'));
+  });
+
+  return;
+}
 
 if (argv._.length) {
   !argv.outputSimple && log(colors.cyan('starting...'));
