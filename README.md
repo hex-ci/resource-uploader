@@ -3,6 +3,12 @@ Resource Uploader
 
 一站式前端资源 CDN 上传工具（使用阿里云 OSS）
 
+## 安装
+
+```
+npm install -g resource-uploader
+```
+
 ## 使用
 
 用法:
@@ -24,6 +30,7 @@ res-up 文件 [选项]
 | --base64        | 是否处理成 base64 内容，而不上传 CDN                           | [布尔] [默认值: false] |
 | --dest          | 本机文件系统路径，使用此参数将保存文件到指定路径，而不上传 CDN | [字符串]               |
 | --output-simple | 是否简化控制台输出                                             | [布尔] [默认值: false] |
+| --init-config   | 初始化配置文件                                                 | [布尔] [默认值: false] |
 | --version, -v   | 显示版本信息                                                   | [布尔]                 |
 
 示例：
