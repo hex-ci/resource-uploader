@@ -303,6 +303,7 @@ if (!fs.existsSync(configFile)) {
       type: 'input',
       name: 'accessKeyId',
       message: '请输入阿里云 OSS AccessKeyId:',
+      filter: value => value.trim(),
       validate: (value) => {
         if (value.trim() != '') {
           return true;
@@ -315,6 +316,7 @@ if (!fs.existsSync(configFile)) {
       type: 'input',
       name: 'secretAccessKey',
       message: '请输入阿里云 OSS AccessKeySecret:',
+      filter: value => value.trim(),
       validate: (value) => {
         if (value.trim() != '') {
           return true;
@@ -327,6 +329,7 @@ if (!fs.existsSync(configFile)) {
       type: 'input',
       name: 'bucket',
       message: '请输入阿里云 OSS Bucket 名称:',
+      filter: value => value.trim(),
       validate: (value) => {
         if (value.trim() != '') {
           return true;
@@ -339,6 +342,7 @@ if (!fs.existsSync(configFile)) {
       type: 'input',
       name: 'urlPrefix',
       message: '请输入阿里云 OSS 自定义域名(请按 http://domain.com/ 格式输入):',
+      filter: value => value.trim(),
       validate: (value) => {
         if (value.trim() != '') {
           return true;
@@ -362,15 +366,14 @@ if (!fs.existsSync(configFile)) {
 
     console.log(chalk.green('\n配置保存成功。\n'));
   });
-
-  return;
-}
-
-if (argv._.length) {
-  !argv.outputSimple && log(chalk.cyan('starting...'));
-
-  gulp.start('alioss');
 }
 else {
-  yargs.showHelp();
+  if (argv._.length) {
+    !argv.outputSimple && log(chalk.cyan('starting...'));
+
+    gulp.start('alioss');
+  }
+  else {
+    yargs.showHelp();
+  }
 }
