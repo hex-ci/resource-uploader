@@ -26,7 +26,7 @@ const pxtoremDefault = require('./package.json').pxtorem;
 
 const $ = gulpLoadPlugins();
 
-const argv = yargs.usage('用法: $0 文件 [选项]') // usage string of application.
+const argv = yargs.usage('用法: $0 [选项] 文件') // usage string of application.
   .option('h', {
     alias: 'help',
     description: '显示帮助信息'
@@ -59,8 +59,9 @@ const argv = yargs.usage('用法: $0 文件 [选项]') // usage string of applic
     description: '是否合并文件'
   }).option('refresh', {
     alias: 'r',
-    type: 'string',
-    description: '刷新 CDN 资源'
+    type: 'boolean',
+    default: false,
+    description: '是否刷新 CDN 资源'
   }).option('init-config', {
     type: 'boolean',
     default: false,
@@ -102,7 +103,9 @@ gulp.task('alioss', (cb) => {
   };
 
   if (argv.refresh) {
-    oss.refresh(aliossOptions, argv.refresh).then(cb);
+    oss.refresh(aliossOptions, (typeof argv._ === 'object' && argv._.length ? argv._[0]: argv._), argv.outputSimple).then((a) => {
+      !argv.outputSimple && log(colors.cyan('done.'));
+    }).then(cb);
 
     return;
   }

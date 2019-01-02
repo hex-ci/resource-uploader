@@ -24,7 +24,7 @@ res-up 文件 [选项]
 | -h, --help      | 显示帮助信息                                                   | [布尔]                 |
 | --compress, -c  | 是否压缩文件                                                   | [布尔] [默认值: true]  |
 | --prefix, -p    | 自定义 URL 路径                                                | [字符串]               |
-| --refresh, -r   | 刷新 CDN 资源                                                  | [字符串]               |
+| --refresh, -r   | 否刷新 CDN 资源                                                | [布尔] [默认值: false] |
 | --name          | 自定义 URL 文件名                                              | [字符串]               |
 | --concat        | 是否合并文件                                                   | [布尔] [默认值: false] |
 | --base64        | 是否处理成 base64 内容，而不上传 CDN                           | [布尔] [默认值: false] |
