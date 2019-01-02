@@ -6,7 +6,7 @@ install:
   - yarn --network-timeout 600000
 
 test_script:
-  - ./index.js --version
+  - node index.js --version
 
 cache:
   - node_modules -> yarn.lock
