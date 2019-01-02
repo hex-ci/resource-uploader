@@ -1,6 +1,8 @@
 Resource Uploader
 ===============================
 
+[![Build Status](https://circleci.com/gh/hex-ci/resource-uploader/tree/master.svg?style=shield)](https://circleci.com/gh/hex-ci/resource-uploader/tree/master) [![Windows Build status](https://ci.appveyor.com/api/projects/status/rtsoxi1ek6atyxfb?svg=true)](https://ci.appveyor.com/project/hex-ci/resource-uploader)
+
 一站式前端资源 CDN 上传工具（使用阿里云 OSS）
 
 ## 安装
