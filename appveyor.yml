@@ -1,0 +1,14 @@
+environment:
+  nodejs_version: "10"
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - yarn --network-timeout 600000
+
+test_script:
+  - ./index.js --version
+
+cache:
+  - node_modules -> yarn.lock
+
+build: off
