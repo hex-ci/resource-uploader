@@ -10,10 +10,11 @@ const inquirer = require('inquirer');
 const gulpLoadPlugins = require('gulp-load-plugins');
 const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
-const colors = require('gulp-util').colors;
+const chalk = require('chalk');
 const log = require('gulp-util').log;
 const through2 = require('through2-concurrent');
 const use = require('postcss-use');
+const readline = require('readline');
 
 const oss = require('./lib/alioss.js');
 const html = require('./lib/html.js');
@@ -79,7 +80,7 @@ const homeDir = os.homedir();
 const configFile = path.join(homeDir, '.config', 'resource-uploader', 'config.json');
 
 const showError = (event) => {
-  log(colors.red('error!'));
+  log(chalk.red('error!'));
 
   console.log(event.message);
 };
@@ -93,6 +94,15 @@ const getConcatName = () => {
   }
 };
 
+const clearConsole = () => {
+  if (process.stdout.isTTY) {
+    const blank = '\n'.repeat(process.stdout.rows)
+    console.log(blank)
+    readline.cursorTo(process.stdout, 0, 0)
+    readline.clearScreenDown(process.stdout)
+  }
+}
+
 gulp.task('alioss', (cb) => {
 
   const isMulti = !!(argv.concat && typeof argv._ === 'object' && argv._.length > 1);
@@ -104,7 +114,7 @@ gulp.task('alioss', (cb) => {
 
   if (argv.refresh) {
     oss.refresh(aliossOptions, (typeof argv._ === 'object' && argv._.length ? argv._[0]: argv._), argv.outputSimple).then((a) => {
-      !argv.outputSimple && log(colors.cyan('done.'));
+      !argv.outputSimple && log(chalk.cyan('done.'));
     }).then(cb);
 
     return;
@@ -122,7 +132,7 @@ gulp.task('alioss', (cb) => {
         const dimensions = sizeOf(file.path);
 
         if (!argv.outputSimple && dimensions) {
-          log('width:', colors.green(dimensions.width) + 'px', 'height:', colors.green(dimensions.height) + 'px');
+          log('width:', chalk.green(dimensions.width) + 'px', 'height:', chalk.green(dimensions.height) + 'px');
         }
       }
       catch (e) {
@@ -146,10 +156,10 @@ gulp.task('alioss', (cb) => {
 
       copyPaste.copy(file.contents, function() {
         if (argv.outputSimple) {
-          console.log(colors.green(file.path));
+          console.log(chalk.green(file.path));
         }
         else {
-          log('Copy to clipboard is OK:', colors.green(file.path));
+          log('Copy to clipboard is OK:', chalk.green(file.path));
         }
 
         return cb(null, file);
@@ -170,18 +180,18 @@ gulp.task('alioss', (cb) => {
       if (argv.dest) {
         return run().pipe($.if(!!argv.name, $.rename(argv.name))).pipe(gulp.dest(argv.dest)).on('data', (file) => {
           if (argv.outputSimple) {
-            console.log(colors.green(file.path));
+            console.log(chalk.green(file.path));
           }
           else {
-            log('OK: ' + colors.green(file.path));
+            log('OK: ' + chalk.green(file.path));
           }
         }).on('end', () => {
-          !argv.outputSimple && log(colors.cyan('done.'));
+          !argv.outputSimple && log(chalk.cyan('done.'));
         });
       }
       else {
         return run().pipe(oss.upload(aliossOptions, argv.outputSimple)).on('end', () => {
-          !argv.outputSimple && log(colors.cyan('done.'));
+          !argv.outputSimple && log(chalk.cyan('done.'));
         });
       }
     }
@@ -255,13 +265,13 @@ gulp.task('alioss', (cb) => {
           .pipe($.if(!!argv.name, $.rename(argv.name)))
           .pipe(gulp.dest(argv.dest)).on('data', (file) => {
             if (argv.outputSimple) {
-              console.log(colors.green(file.path));
+              console.log(chalk.green(file.path));
             }
             else {
-              log('OK: ' + colors.green(file.path));
+              log('OK: ' + chalk.green(file.path));
             }
           }).on('end', () => {
-            !argv.outputSimple && log(colors.cyan('done.'));
+            !argv.outputSimple && log(chalk.cyan('done.'));
           });
       }
       else {
@@ -269,7 +279,7 @@ gulp.task('alioss', (cb) => {
           .pipe($.if(!!argv.base64, through2.obj({ maxConcurrency: 8 }, toBase64)))
           .pipe($.if(!!argv.base64, through2.obj({ maxConcurrency: 8 }, toClipboard)))
           .pipe($.if(!argv.base64, oss.upload(aliossOptions, argv.outputSimple))).on('end', () => {
-            !argv.outputSimple && log(colors.cyan('done.'));
+            !argv.outputSimple && log(chalk.cyan('done.'));
           });
       }
     }
@@ -284,6 +294,10 @@ if (argv.initConfig) {
 }
 
 if (!fs.existsSync(configFile)) {
+  clearConsole();
+  console.log(chalk.whiteBright(`\n欢迎使用 Resource Uploader v${version}\n`));
+  console.log(chalk.white(`请设置阿里云 OSS 相关信息：\n`));
+
   const questions = [
     {
       type: 'input',
@@ -346,14 +360,14 @@ if (!fs.existsSync(configFile)) {
 
     fs.writeFileSync(configFile, JSON.stringify({ alioss: answers }, null, '  '), { mode: 0o600 });
 
-    log(colors.cyan('config saved!'));
+    console.log(chalk.green('\n配置保存成功。\n'));
   });
 
   return;
 }
 
 if (argv._.length) {
-  !argv.outputSimple && log(colors.cyan('starting...'));
+  !argv.outputSimple && log(chalk.cyan('starting...'));
 
   gulp.start('alioss');
 }
