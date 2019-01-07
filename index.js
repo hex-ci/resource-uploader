@@ -222,7 +222,7 @@ gulp.task('alioss', (cb) => {
           .pipe($.if('*.js', $.babel({
             presets: [
               [
-                require.resolve('@babel/preset-env'),
+                '@babel/preset-env',
                 {
                   targets: { browsers }
                 }
