@@ -220,9 +220,11 @@ gulp.task('alioss', (cb) => {
           ])).on('error', showError))
 
           .pipe($.if('*.js', $.babel({
+            babelrc: false,
+            compact: false,
             presets: [
               [
-                path.join(__dirname, 'node_modules', '@babel/preset-env'),
+                require.resolve('@babel/preset-env', { paths: [__dirname] }),
                 {
                   targets: { browsers }
                 }
