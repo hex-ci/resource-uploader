@@ -364,9 +364,20 @@ if (!fs.existsSync(configFile)) {
       fs.mkdirSync(path.join(homeDir, '.config', 'resource-uploader'))
     }
 
-    fs.writeFileSync(configFile, JSON.stringify({ alioss: answers }, null, '  '), { mode: 0o600 });
+    oss.getBucketLocation(answers).then(({ isSuccess, data }) => {
+      if (isSuccess) {
+        answers.endpoint = `http://${data.LocationConstraint}.aliyuncs.com`;
 
-    console.log(chalk.green('\n配置保存成功。\n'));
+        fs.writeFileSync(configFile, JSON.stringify({ alioss: answers }, null, '  '), { mode: 0o600 });
+
+        console.log(chalk.green('\n配置保存成功。\n'));
+      }
+      else {
+        console.log(chalk.red('\n' + data.message));
+        console.log(chalk.red('\n获取 Bucket 数据中心失败！请重新配置 Resource Uploader！\n'));
+      }
+    });
+
   });
 }
 else {
