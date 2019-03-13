@@ -63,6 +63,10 @@ const argv = yargs.usage('用法: $0 [选项] 文件') // usage string of applic
     type: 'boolean',
     default: false,
     description: '是否刷新 CDN 资源'
+  }).option('config', {
+    type: 'string',
+    default: '',
+    description: '自定义配置文件'
   }).option('init-config', {
     type: 'boolean',
     default: false,
@@ -77,7 +81,7 @@ const argv = yargs.usage('用法: $0 [选项] 文件') // usage string of applic
 
 
 const homeDir = os.homedir();
-const configFile = path.join(homeDir, '.config', 'resource-uploader', 'config.json');
+let configFile = path.join(homeDir, '.config', 'resource-uploader', 'config.json');
 
 const showError = (event) => {
   log(chalk.red('error!'));
@@ -101,6 +105,10 @@ const clearConsole = () => {
     readline.cursorTo(process.stdout, 0, 0)
     readline.clearScreenDown(process.stdout)
   }
+}
+
+if (argv.config) {
+  configFile = argv.config;
 }
 
 gulp.task('alioss', (cb) => {
@@ -381,6 +389,10 @@ if (!fs.existsSync(configFile)) {
   });
 }
 else {
+  if (argv.config) {
+    oss.setConfigFile(argv.config);
+  }
+
   if (argv._.length) {
     !argv.outputSimple && log(chalk.cyan('starting...'));
 

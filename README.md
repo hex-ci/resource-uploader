@@ -32,6 +32,7 @@ res-up [选项] 文件
 | --dest          | 本机文件系统路径，使用此参数将保存文件到指定路径，而不上传 CDN | [字符串]               |
 | --refresh, -r   | 否刷新 CDN 资源                                                | [布尔] [默认值: false] |
 | --output-simple | 是否简化控制台输出                                             | [布尔] [默认值: false] |
+| --config        | 自定义配置文件，使用此参数可以手动指定使用哪个配置文件         | [字符串] [默认值: ""]  |
 | --init-config   | 初始化配置文件                                                 | [布尔] [默认值: false] |
 | --version, -v   | 显示版本信息                                                   | [布尔]                 |
 
@@ -48,5 +49,6 @@ res-up --base64 filename.png
 res-up --base64 --dest /Users/xxx/Desktop filename.png
 res-up --dest /Users/xxx/Desktop filename.png
 res-up --no-compress filename.png
+res-up --config ./custom-config.json filename.png
 res-up --refresh "https://domain.com/-/xxx/filename.png"
 ```
