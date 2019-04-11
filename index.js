@@ -232,8 +232,8 @@ gulp.task('alioss', (cb) => {
             compact: false,
             presets: [
               [
-                require.resolve('@babel/preset-env', { paths: [__dirname] }),
-                {
+                require.resolve('@babel/preset-env', { paths: [__dirname] }), {
+                  modules: false,
                   targets: { browsers }
                 }
               ]
