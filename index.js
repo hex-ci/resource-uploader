@@ -259,10 +259,12 @@ gulp.task('alioss', (cb) => {
               'postcss-pxtorem': pxtoremDefault
             }
           }), cssnano({
-            autoprefixer: false,
-            zindex: false,
-            reduceIdents: false,
-            reduceTransforms: false
+            preset: ['default', {
+              autoprefixer: false,
+              zindex: false,
+              reduceIdents: false,
+              reduceTransforms: false
+            }]
           }), autoprefixer({
             browsers
           }) ])))
