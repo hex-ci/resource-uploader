@@ -39,7 +39,7 @@
     "inquirer": "^6.2.1",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "pinyin": "^2.8.3",
     "plugin-error": "^1.0.1",
     "plur": "^3.0.1",
