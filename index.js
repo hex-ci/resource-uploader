@@ -11,7 +11,7 @@ const gulpLoadPlugins = require('gulp-load-plugins');
 const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 const chalk = require('chalk');
-const log = require('gulp-util').log;
+const log = require('fancy-log');
 const through2 = require('through2-concurrent');
 const use = require('postcss-use');
 const readline = require('readline');
@@ -20,6 +20,9 @@ const oss = require('./lib/alioss.js');
 const html = require('./lib/html.js');
 const inlineCompress = require('./lib/inline-compress.js');
 const imagemin = require('./lib/imagemin.js');
+const htmlmin = require('./lib/gulp-htmlmin.js');
+const less = require('./lib/gulp-less.js');
+const sass = require('./lib/gulp-sass.js');
 
 const version = require('./package.json').version;
 const browsers = require('./package.json').browserslist;
@@ -121,7 +124,7 @@ gulp.task('alioss', (cb) => {
   };
 
   if (argv.refresh) {
-    oss.refresh(aliossOptions, (typeof argv._ === 'object' && argv._.length ? argv._[0]: argv._), argv.outputSimple).then((a) => {
+    oss.refresh(aliossOptions, (typeof argv._ === 'object' && argv._.length ? argv._[0] : argv._), argv.outputSimple).then(() => {
       !argv.outputSimple && log(chalk.cyan('done.'));
     }).then(cb);
 
@@ -211,7 +214,7 @@ gulp.task('alioss', (cb) => {
 
           .pipe($.if(/\.(htm|html)$/i, html()))
           .pipe($.if(/\.(htm|html)$/i, inlineCompress()))
-          .pipe($.if(/\.(htm|html)$/i, $.htmlmin({
+          .pipe($.if(/\.(htm|html)$/i, htmlmin({
             collapseBooleanAttributes: true,
             removeComments: true,
             removeScriptTypeAttributes: true,
@@ -249,9 +252,9 @@ gulp.task('alioss', (cb) => {
           })).on('error', showError))
           .pipe($.if('*.js', $.sourcemaps.write({ addComment: false })))
 
-          .pipe($.if(/\.less$/i, $.less()).on('error', showError))
+          .pipe($.if(/\.less$/i, less()).on('error', showError))
           .pipe($.if(/\.less$/i, $.sourcemaps.write({ addComment: false })))
-          .pipe($.if(/\.(scss|sass)$/i, $.sass({ outputStyle: 'expanded' })).on('error', $.sass.logError))
+          .pipe($.if(/\.(scss|sass)$/i, sass({ outputStyle: 'expanded' })).on('error', sass.logError))
           .pipe($.if(/\.(scss|sass)$/i, $.sourcemaps.write({ addComment: false })))
           .pipe($.if(/\.(css|less|scss|sass)$/i, $.postcss([ use({
             modules: [ 'postcss-pxtorem' ],
@@ -362,7 +365,7 @@ if (!fs.existsSync(configFile)) {
 
         return '请输入自定义域名';
       }
-    },
+    }
   ];
 
   inquirer.prompt(questions).then(answers => {
