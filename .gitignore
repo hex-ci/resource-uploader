@@ -67,3 +67,5 @@ build/*.json
 
 .stfolder
 .stignore
+
+package-lock.json
