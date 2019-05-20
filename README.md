@@ -20,7 +20,7 @@ npm install -g resource-uploader
 * 支持 px 单位转 rem 单位（可选）
 * 支持 CSS 压缩和优化
 * 支持 jpg/png/gif 压缩和优化，优化包括渐进式加载等
-* 支持处理 html 文件
+* 支持处理 HTML 文件，自动处理 HTML 中引用的所有资源
 * 自动生成全站唯一 URL，形如 `https://domain.com/-/905bab36808f28a7/filename.png`
 * 自动设置 HTTP 缓存头，永久缓存资源在浏览器
 * 支持多配置
