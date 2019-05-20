@@ -11,6 +11,22 @@ Resource Uploader
 npm install -g resource-uploader
 ```
 
+## 特性
+
+* 支持 ES6/7/8 转译 ES5
+* 支持 Javascript 压缩和优化
+* 支持 Sass/Less 转 CSS
+* 支持 CSS 自动加浏览器前缀
+* 支持 px 单位转 rem 单位（可选）
+* 支持 CSS 压缩和优化
+* 支持 jpg/png/gif 压缩和优化，优化包括渐进式加载等
+* 支持处理 html 文件
+* 自动生成全站唯一 URL，形如 `https://domain.com/-/905bab36808f28a7/filename.png`
+* 自动设置 HTTP 缓存头，永久缓存资源在浏览器
+* 支持多配置
+* 支持处理成 BASE64 资源
+* 支持文件合并
+
 ## 使用
 
 用法:
