@@ -24,9 +24,12 @@ const htmlmin = require('./lib/gulp-htmlmin.js');
 const less = require('./lib/gulp-less.js');
 const sass = require('./lib/gulp-sass.js');
 
-const version = require('./package.json').version;
-const browsers = require('./package.json').browserslist;
-const pxtoremDefault = require('./package.json').pxtorem;
+const pkg = require('./package.json');
+
+const version = pkg.version;
+const browsers = pkg.browserslist;
+const pxtoremDefault = pkg.pxtorem;
+const babelPlugins = pkg.babelPlugins.map(item => require.resolve(item, { paths: [__dirname] }));
 
 const $ = gulpLoadPlugins();
 
@@ -233,6 +236,7 @@ gulp.task('alioss', (cb) => {
           .pipe($.if('*.js', $.babel({
             babelrc: false,
             compact: false,
+            plugins: babelPlugins,
             presets: [
               [
                 require.resolve('@babel/preset-env', { paths: [__dirname] }), {
