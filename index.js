@@ -29,7 +29,16 @@ const pkg = require('./package.json');
 const version = pkg.version;
 const browsers = pkg.browserslist;
 const pxtoremDefault = pkg.pxtorem;
-const babelPlugins = pkg.babelPlugins.map(item => require.resolve(item, { paths: [__dirname] }));
+const babelPlugins = pkg.babelPlugins.map(item => {
+  if (Array.isArray(item)) {
+    item[0] = require.resolve(item[0], { paths: [__dirname] })
+  }
+  else {
+    item = require.resolve(item, { paths: [__dirname] })
+  }
+
+  return item;
+});
 
 const $ = gulpLoadPlugins();
 
@@ -241,7 +250,9 @@ gulp.task('alioss', (cb) => {
               [
                 require.resolve('@babel/preset-env', { paths: [__dirname] }), {
                   modules: false,
-                  targets: { browsers }
+                  targets: { browsers },
+                  useBuiltIns: 'usage',
+                  corejs: 3
                 }
               ]
             ]
