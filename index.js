@@ -250,9 +250,7 @@ gulp.task('alioss', (cb) => {
               [
                 require.resolve('@babel/preset-env', { paths: [__dirname] }), {
                   modules: false,
-                  targets: { browsers },
-                  useBuiltIns: 'usage',
-                  corejs: 3
+                  targets: { browsers }
                 }
               ]
             ]
