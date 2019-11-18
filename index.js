@@ -282,7 +282,7 @@ gulp.task('alioss', (cb) => {
               reduceTransforms: false
             }]
           }), autoprefixer({
-            browsers
+            overrideBrowserslist: browsers
           }) ])))
           .pipe($.if(/\.(css|less|scss|sass)$/i, $.sourcemaps.write({ addComment: false })))
       };
