@@ -249,6 +249,7 @@ gulp.task('alioss', (cb) => {
           ])).on('error', showError))
 
           .pipe($.if('*.js', $.babel({
+            cwd: __dirname,
             babelrc: false,
             compact: false,
             plugins: babelPlugins,
