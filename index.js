@@ -56,7 +56,7 @@ const argv = yargs.usage('用法: $0 [选项] 文件') // usage string of applic
     alias: 'o',
     type: 'boolean',
     default: false,
-    description: '是否加密混淆文件'
+    description: '是否开启 JS 深度混淆'
   }).option('prefix', {
     alias: 'p',
     type: 'string',
