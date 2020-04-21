@@ -42,6 +42,7 @@
     "imagemin-svgo": "^7.0.0",
     "inquirer": "^6.2.1",
     "is-png": "^2.0.0",
+    "javascript-obfuscator": "^0.27.4",
     "less": "^3.9.0",
     "lodash": "^4.17.11",
     "lodash.clonedeep": "^4.5.0",

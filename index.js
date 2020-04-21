@@ -23,6 +23,7 @@ const imagemin = require('./lib/imagemin.js');
 const htmlmin = require('./lib/gulp-htmlmin.js');
 const less = require('./lib/gulp-less.js');
 const sass = require('./lib/gulp-sass.js');
+const javascriptObfuscator = require('./lib/gulp-javascript-obfuscator.js');
 
 const pkg = require('./package.json');
 
@@ -51,6 +52,11 @@ const argv = yargs.usage('用法: $0 [选项] 文件') // usage string of applic
     type: 'boolean',
     default: true,
     description: '是否压缩文件'
+  }).option('obfuscate', {
+    alias: 'o',
+    type: 'boolean',
+    default: false,
+    description: '是否加密混淆文件'
   }).option('prefix', {
     alias: 'p',
     type: 'string',
@@ -264,6 +270,7 @@ gulp.task('alioss', (cb) => {
             }
           })).on('error', showError))
           .pipe($.if('*.js', $.sourcemaps.write({ addComment: false })))
+          .pipe($.if((file) => /\.js$/i.test(file.path) && argv.obfuscate, javascriptObfuscator({ compact: true })))
 
           .pipe($.if(/\.less$/i, less()).on('error', showError))
           .pipe($.if(/\.less$/i, $.sourcemaps.write({ addComment: false })))
