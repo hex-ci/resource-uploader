@@ -1,6 +1,6 @@
 {
   "name": "resource-uploader",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "前端资源上传工具",
   "author": "Hex <hex@codeigniter.org.cn>",
   "main": "index.js",
