@@ -46,6 +46,7 @@
     "less": "^3.9.0",
     "lodash": "^4.17.11",
     "lodash.clonedeep": "^4.5.0",
+    "mime": "^2.4.6",
     "moment": "^2.22.2",
     "node-sass": "^4.12.0",
     "optipng-bin": "^5.1.0",
