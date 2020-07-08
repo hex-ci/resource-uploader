@@ -1,7 +1,7 @@
 {
   "name": "resource-uploader",
   "version": "1.9.1",
-  "description": "前端资源上传工具",
+  "description": "一站式资源上传和处理工具",
   "author": "Hex <hex@codeigniter.org.cn>",
   "main": "index.js",
   "repository": "https://github.com/hex-ci/resource-uploader",
