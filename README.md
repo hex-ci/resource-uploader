@@ -144,6 +144,8 @@ JS 文件是否使用 IIFE（立即执行函数）包裹，启用压缩选项才
 res-up refresh URL
 ```
 
+URL 表示已经由 resource-uploader 生成的 OSS URL
+
 ### 公共选项
 
 #### --output-simple
