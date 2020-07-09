@@ -47,7 +47,6 @@
     "lodash.clonedeep": "^4.5.0",
     "mime": "^2.4.6",
     "moment": "^2.22.2",
-    "node-sass": "^4.12.0",
     "optipng-bin": "^5.1.0",
     "pinyin": "^2.8.3",
     "plugin-error": "^1.0.1",
@@ -56,12 +55,15 @@
     "postcss-pxtorem": "^4.0.1",
     "postcss-use": "^3.0.0",
     "pretty-bytes": "^5.1.0",
+    "sass": "^1.26.10",
     "shortid": "^2.2.14",
     "terser": "^4.8.0",
     "through2-concurrent": "^2.0.0",
-    "uglify-js": "^3.5.15",
     "vinyl-sourcemaps-apply": "^0.2.1",
     "yargs": "^15.4.0"
+  },
+  "engines": {
+    "node": ">=8.9.0"
   },
   "bin": {
     "resource-uploader": "index.js",
@@ -105,7 +107,7 @@
     "@babel/plugin-proposal-nullish-coalescing-operator"
   ],
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0"
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0"
   }
 }
