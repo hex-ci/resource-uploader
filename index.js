@@ -80,6 +80,10 @@ const argv = yargs.usage('用法: $0 [命令] [选项] 文件')
     type: 'boolean',
     default: false,
     description: '是否上传原始文件'
+  }).option('concat', {
+    type: 'boolean',
+    default: false,
+    description: '是否合并文件'
   }).option('prefix', {
     alias: 'p',
     type: 'string',
@@ -98,10 +102,6 @@ const argv = yargs.usage('用法: $0 [命令] [选项] 文件')
     type: 'boolean',
     default: false,
     description: '是否简化控制台输出'
-  }).option('concat', {
-    type: 'boolean',
-    default: false,
-    description: '是否合并文件'
   }).option('config', {
     type: 'string',
     default: '',
