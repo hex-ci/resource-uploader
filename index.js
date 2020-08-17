@@ -218,7 +218,7 @@ gulp.task('upload', () => {
 
   const run = () => {
     return gulp.src(argv._)
-      .pipe($.if(/\.(js|css|less|scss|sass)$/i, $.sourcemaps.init()))
+      .pipe($.if(file => !argv.raw && /\.(js|css|less|scss|sass)$/i.test(file.path), $.sourcemaps.init()))
       .pipe($.if(isMulti, $.concat(getConcatName())))
 
       .pipe($.if(/\.(htm|html)$/i, html(argv)))
@@ -259,7 +259,7 @@ gulp.task('upload', () => {
         footer: '}()'
       })).on('error', showError))
 
-      .pipe($.if('*.js', $.sourcemaps.write({ addComment: false })))
+      .pipe($.if(file => argv.compress && argv.iife && /\.js$/i.test(file.path), $.sourcemaps.write({ addComment: false })))
 
       .pipe($.if(file => argv.compress && /\.js$/i.test(file.path), terser({
         ie8: true,
@@ -268,7 +268,7 @@ gulp.task('upload', () => {
           drop_console: true
         }
       })).on('error', showError))
-      .pipe($.if('*.js', $.sourcemaps.write({ addComment: false })))
+      .pipe($.if(file => argv.compress && /\.js$/i.test(file.path), $.sourcemaps.write({ addComment: false })))
 
       .pipe($.if(file => argv.obfuscate && /\.js$/i.test(file.path), javascriptObfuscator({ compact: true })))
 
