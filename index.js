@@ -217,7 +217,7 @@ const uploadTask = gulp.series(() => {
   };
 
   const run = () => {
-    return gulp.src(argv._)
+    return gulp.src(argv._).on('error', showError)
       .pipe($.if(file => !argv.raw && /\.(js|css|less|scss|sass)$/i.test(file.path), $.sourcemaps.init()))
       .pipe($.if(isMulti, $.concat(getConcatName())))
 
