@@ -166,7 +166,7 @@ const aliossOptions = {
 };
 
 // 上传资源到 OSS
-gulp.task('upload', () => {
+const uploadTask = gulp.series(() => {
 
   const isMulti = !!(argv.concat && typeof argv._ === 'object' && argv._.length > 1);
 
@@ -324,7 +324,7 @@ gulp.task('upload', () => {
 });
 
 // 刷新 OSS 资源
-gulp.task('refresh', (cb) => {
+const refreshTask = gulp.series(cb => {
   oss.refresh(aliossOptions, argv.url, argv.outputSimple).then(() => {
     !argv.outputSimple && log(chalk.cyan('done.'));
   }).then(cb);
@@ -431,14 +431,14 @@ else {
 
     if (argv._[0] === 'refresh') {
       if (argv.url) {
-        gulp.start('refresh');
+        refreshTask();
       }
       else {
         yargs.showHelp('log');
       }
     }
     else {
-      gulp.start('upload');
+      uploadTask();
     }
   }
   else {

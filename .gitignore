@@ -69,3 +69,5 @@ build/*.json
 .stignore
 
 package-lock.json
+
+.vscode/
