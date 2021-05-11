@@ -127,7 +127,7 @@ let configFile = path.join(homeDir, '.config', 'resource-uploader', 'config.json
 const showError = (event) => {
   log(chalk.red('error!'));
 
-  console.log(event.message);
+  console.log(event.message || (event.error && event.error.message));
 };
 
 const getConcatName = () => {
@@ -164,6 +164,8 @@ const aliossOptions = {
   uriPrefix: argv.prefix || '',
   uriName: argv.name || ''
 };
+
+gulp.on('error', showError);
 
 // 上传资源到 OSS
 const uploadTask = gulp.series(() => {
