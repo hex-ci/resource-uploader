@@ -61,7 +61,7 @@ const argv = yargs.usage('用法: $0 [命令] [选项] 文件')
     description: '是否使用 Babel 转译 JS 文件'
   }).option('iife', {
     type: 'boolean',
-    default: true,
+    default: false,
     description: 'JS 文件是否使用 IIFE（立即执行函数）包裹，启用压缩选项才可使用'
   }).option('obfuscate', {
     alias: 'o',
