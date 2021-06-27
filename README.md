@@ -68,9 +68,7 @@ JS 文件是否使用 IIFE（立即执行函数）包裹，启用压缩选项才
 
 类型: boolean
 
-默认值: true
-
-不使用 IIFE 可以这样 `--no-iife`
+默认值: false
 
 ##### --obfuscate
 
