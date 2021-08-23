@@ -208,6 +208,8 @@ URL 表示已经由 resource-uploader 生成的 OSS URL。一般使用这个命�
 
 注意，其中 `propList` 和 `selectorBlackList` 中数组要用单引号括起来，数组中的字符串必须使用双引号，并且不能换行。
 
+各个选项的意义请参考 https://github.com/cuth/postcss-pxtorem
+
 ## 示例
 
 ```
