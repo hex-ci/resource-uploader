@@ -13,7 +13,7 @@ const autoprefixer = require('autoprefixer');
 const chalk = require('chalk');
 const log = require('fancy-log');
 const through2 = require('through2-concurrent');
-const use = require('postcss-use');
+const use = require('./lib/postcss-use');
 const readline = require('readline');
 
 const oss = require('./lib/alioss');
