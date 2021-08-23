@@ -19,7 +19,6 @@ const readline = require('readline');
 const oss = require('./lib/alioss');
 const html = require('./lib/html');
 const inlineCompress = require('./lib/inline-compress');
-const imagemin = require('./lib/imagemin');
 const htmlmin = require('./lib/gulp-htmlmin');
 const less = require('./lib/gulp-less');
 const sass = require('./lib/gulp-sass');
@@ -235,11 +234,11 @@ const uploadTask = gulp.series(() => {
         removeEmptyAttributes: true
       })).on('error', showError))
 
-      .pipe($.if(file => argv.compress && /\.(png|jpg|jpeg|gif|svg)$/i.test(file.path), imagemin([
-        imagemin.gifsicle({ interlaced: true, optimizationLevel: 3 }),
-        imagemin.jpegtran({ progressive: true }),
-        imagemin.optipng({ optimizationLevel: 7 })
-      ])).on('error', showError))
+      .pipe($.if(file => argv.compress && /\.(png|jpg|jpeg|gif|svg)$/i.test(file.path), $.imageminChangba([
+        $.imageminChangba.gifsicle({ interlaced: true, optimizationLevel: 3 }),
+        $.imageminChangba.jpegtran({ progressive: true }),
+        $.imageminChangba.optipng({ optimizationLevel: 7, autoInterlacedMinSize: 1024 * 50 })
+      ], { silent: true })).on('error', showError))
 
       .pipe($.if(file => argv.babel && /\.js$/i.test(file.path), $.babel({
         cwd: __dirname,
