@@ -180,6 +180,34 @@ URL 表示已经由 resource-uploader 生成的 OSS URL。一般使用这个命�
 
 默认值: false
 
+### 样式文件中的 px 转 rem 单位
+
+在样式文件的最开始增加 `@postcss-use postcss-pxtorem;` 即可，支持 css、sass、less。
+
+如果需要对转换进行配置，可以这样：
+
+```css
+@postcss-use postcss-pxtorem {
+  rootValue: 37.5;
+}
+```
+
+配置默认值：
+
+```css
+@postcss-use postcss-pxtorem {
+  rootValue: 75;
+  unitPrecision: 6;
+  replace: true;
+  mediaQuery: false;
+  minPixelValue: 2;
+  propList: '["*"]';
+  selectorBlackList: '["weui-", "no-rem-"]';
+}
+```
+
+注意，其中 `propList` 和 `selectorBlackList` 中数组要用单引号括起来，数组中的字符串必须使用双引号，并且不能换行。
+
 ## 示例
 
 ```
