@@ -391,7 +391,9 @@ if (!fs.existsSync(configFile)) {
         if (value.trim() != '') {
           return true;
         }
-
+        if(!value.trim().endsWith('/')) {
+          return '自定义域名需要以 / 结尾';
+        }
         return '请输入自定义域名';
       }
     }

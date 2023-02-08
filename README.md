@@ -5,6 +5,35 @@ Resource Uploader
 
 一站式资源上传和处理工具（使用阿里云 OSS）
 
+- [Resource Uploader](#resource-uploader)
+  - [安装](#安装)
+  - [特性](#特性)
+  - [使用](#使用)
+    - [上传资源到 OSS](#上传资源到-oss)
+      - [用法](#用法)
+      - [选项](#选项)
+        - [--compress](#--compress)
+        - [--babel](#--babel)
+        - [--iife](#--iife)
+        - [--obfuscate](#--obfuscate)
+        - [--sass](#--sass)
+        - [--less](#--less)
+        - [--raw](#--raw)
+        - [--concat](#--concat)
+        - [--prefix](#--prefix)
+        - [--name](#--name)
+        - [--base64](#--base64)
+        - [--dest](#--dest)
+    - [刷新 OSS 资源](#刷新-oss-资源)
+      - [用法](#用法-1)
+    - [其它选项](#其它选项)
+      - [--output-simple](#--output-simple)
+      - [--config](#--config)
+      - [--init-config](#--init-config)
+    - [样式文件中的 px 转 rem 单位](#样式文件中的-px-转-rem-单位)
+  - [示例](#示例)
+
+
 ## 安装
 
 ```
@@ -34,6 +63,11 @@ npm install -g resource-uploader
 
 #### 用法
 
+```
+resource-uploader [选项] 文件
+```
+
+Alias:
 ```
 res-up [选项] 文件
 ```
@@ -168,9 +202,32 @@ URL 表示已经由 resource-uploader 生成的 OSS URL。一般使用这个命�
 
 #### --config
 
-自定义配置文件。可以通过这个选项指定其他配置文件的路径，一般用于多 OSS 账户之间的切换。
+自定义配置文件。JSON文件格式，**配置数据需包裹在 alioss 字段名中**，可以通过这个选项指定其他配置文件的路径，一般用于多 OSS 账户之间的切换。
 
 类型: string
+
+示例: 
+
+custom-config.json
+```
+{
+  "alioss": {
+    "accessKeyId": "xxx",
+    "secretAccessKey": "xxx",
+    "bucket": "xxx",
+    "urlPrefix": "xxx/",
+    "endpoint": ""
+  }
+}
+```
+
+字段解释：
+
+- accessKeyId：阿里云 OSS AccessKeyId
+- secretAccessKey：阿里云 OSS AccessKeySecret
+- bucket：阿里云 OSS Bucket 名称
+- urlPrefix：阿里云 OSS 自定义域名，**需以 / 结尾**
+- endpoint：阿里云 OSS 源站地址，为可选项，也可以直接去掉。
 
 #### --init-config
 
