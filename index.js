@@ -388,13 +388,14 @@ if (!fs.existsSync(configFile)) {
       message: '请输入阿里云 OSS 自定义域名(请按 http://domain.com/ 格式输入):',
       filter: value => value.trim(),
       validate: (value) => {
-        if (value.trim() != '') {
-          return true;
+        if (value.trim() === '') {
+          return '请输入自定义域名';
         }
-        if(!value.trim().endsWith('/')) {
+        if (!value.trim().endsWith('/')) {
           return '自定义域名需要以 / 结尾';
         }
-        return '请输入自定义域名';
+
+        return true;
       }
     }
   ];

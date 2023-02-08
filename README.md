@@ -67,7 +67,8 @@ npm install -g resource-uploader
 resource-uploader [选项] 文件
 ```
 
-Alias:
+简写：
+
 ```
 res-up [选项] 文件
 ```
@@ -206,9 +207,10 @@ URL 表示已经由 resource-uploader 生成的 OSS URL。一般使用这个命�
 
 类型: string
 
-示例: 
+示例:
 
 custom-config.json
+
 ```
 {
   "alioss": {
