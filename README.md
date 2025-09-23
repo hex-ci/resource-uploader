@@ -1,7 +1,7 @@
 Resource Uploader
 ===============================
 
-[![Build Status](https://circleci.com/gh/hex-ci/resource-uploader/tree/master.svg?style=shield)](https://circleci.com/gh/hex-ci/resource-uploader/tree/master) [![Windows Build status](https://ci.appveyor.com/api/projects/status/rtsoxi1ek6atyxfb?svg=true)](https://ci.appveyor.com/project/hex-ci/resource-uploader) [![npm version](https://badgen.net/npm/v/resource-uploader)](https://www.npmjs.com/package/resource-uploader) [![Downloads](https://badgen.net/npm/dt/resource-uploader)](https://www.npmjs.com/package/resource-uploader)
+[![build](https://github.com/hex-ci/resource-uploader/actions/workflows/ci.yml/badge.svg)](https://github.com/hex-ci/resource-uploader/actions/workflows/ci.yml) [![Windows Build status](https://ci.appveyor.com/api/projects/status/rtsoxi1ek6atyxfb?svg=true)](https://ci.appveyor.com/project/hex-ci/resource-uploader) [![npm version](https://badgen.net/npm/v/resource-uploader)](https://www.npmjs.com/package/resource-uploader) [![Downloads](https://badgen.net/npm/dt/resource-uploader)](https://www.npmjs.com/package/resource-uploader)
 
 一站式资源上传和处理工具（使用阿里云 OSS）
 
