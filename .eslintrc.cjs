@@ -1,8 +1,13 @@
-{
-  "parser": "babel-eslint",
+module.exports = {
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 2018,
-    "sourceType": "module"
+    "sourceType": "module",
+    requireConfigFile: false,
+    babelOptions: {
+      babelrc: false,
+      configFile: false
+    }
   },
   "env": {
     "node": true,

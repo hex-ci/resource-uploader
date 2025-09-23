@@ -1,50 +1,50 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs');
-const gulp = require('gulp');
-const path = require('path');
-const fs = require('fs');
-const os = require('os');
-const process = require('process');
-const inquirer = require('inquirer');
-const gulpLoadPlugins = require('gulp-load-plugins');
-const cssnano = require('cssnano');
-const autoprefixer = require('autoprefixer');
-const chalk = require('chalk');
-const log = require('fancy-log');
-const through2 = require('through2-concurrent');
-const use = require('./lib/postcss-use');
-const readline = require('readline');
+import yargs from 'yargs';
+import gulp from 'gulp';
+import path from 'path';
+import fs from 'fs';
+import os from 'os';
+import process from 'process';
+import inquirer from 'inquirer';
+import cssnano from 'cssnano';
+import autoprefixer from 'autoprefixer';
+import chalk from 'chalk';
+import log from 'fancy-log';
+import through2 from 'through2-concurrent';
+import readline from 'readline';
+import Datauri from 'datauri';
+import sizeOf from 'image-size';
+import copyPaste from 'copy-paste';
+import * as dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+import gulpIf from 'gulp-if';
+import gulpConcat from 'gulp-concat';
+import gulpRename from 'gulp-rename';
+import gulpImagemin, { gifsicle, mozjpeg, optipng } from 'gulp-imagemin';
+import gulpBabel from 'gulp-babel';
+import gulpSourceMaps from 'gulp-sourcemaps';
+import gulpPostcss from 'gulp-postcss';
 
-const oss = require('./lib/alioss');
-const html = require('./lib/html');
-const inlineCompress = require('./lib/inline-compress');
-const htmlmin = require('./lib/gulp-htmlmin');
-const less = require('./lib/gulp-less');
-const sass = require('./lib/gulp-sass');
-const javascriptObfuscator = require('./lib/gulp-javascript-obfuscator');
-const terser = require('./lib/gulp-terser');
-const wrapper = require('./lib/gulp-wrapper');
+import use from './lib/postcss-use.js';
+import oss from './lib/alioss.js';
+import html from './lib/html.js';
+import inlineCompress from './lib/inline-compress.js';
+import htmlmin from './lib/gulp-htmlmin.js';
+import less from './lib/gulp-less.js';
+import javascriptObfuscator from './lib/gulp-javascript-obfuscator.js';
+import terser from './lib/gulp-terser.js';
+import wrapper from './lib/gulp-wrapper.js';
 
-const pkg = require('./package.json');
+import pkg from './package.json' with { type: 'json' };
 
+const __dirname = path.resolve();
+const sass = gulpSass(dartSass);
 const version = pkg.version;
 const browsers = pkg.browserslist;
 const pxtoremDefault = pkg.pxtorem;
-const babelPlugins = pkg.babelPlugins.map(item => {
-  if (Array.isArray(item)) {
-    item[0] = require.resolve(item[0], { paths: [__dirname] })
-  }
-  else {
-    item = require.resolve(item, { paths: [__dirname] })
-  }
 
-  return item;
-});
-
-const $ = gulpLoadPlugins();
-
-const argv = yargs.usage('用法: $0 [命令] [选项] 文件')
+const parsedYargs = yargs(process.argv.slice(2)).usage('用法: $0 [命令] [选项] 文件')
   .command('refresh <URL>', '刷新已存在的 OSS 资源缓存')
   .option('h', {
     alias: 'help',
@@ -117,8 +117,8 @@ const argv = yargs.usage('用法: $0 [命令] [选项] 文件')
   .help()
   .wrap(95)
   .locale('zh_CN')
-  .argv;
 
+const argv = parsedYargs.argv;
 
 const homeDir = os.homedir();
 let configFile = path.join(homeDir, '.config', 'resource-uploader', 'config.json');
@@ -172,15 +172,13 @@ const uploadTask = gulp.series(() => {
   const isMulti = !!(argv.concat && typeof argv._ === 'object' && argv._.length > 1);
 
   const toBase64 = (file, enc, cb) => {
-    const Datauri = require('datauri');
-    const sizeOf = require('image-size');
-
     if (file.isDirectory() || file.isStream()) {
       return cb();
     }
 
     try {
-      const dimensions = sizeOf(file.path);
+      const buffer = fs.readFileSync(file.path);
+      const dimensions = sizeOf(buffer);
 
       if (!argv.outputSimple && dimensions) {
         log('width:', chalk.green(dimensions.width) + 'px', 'height:', chalk.green(dimensions.height) + 'px');
@@ -191,16 +189,14 @@ const uploadTask = gulp.series(() => {
 
     const datauri = new Datauri(file.path);
 
-    file.contents = Buffer.from(datauri.content);
+    datauri.then((result) => {
+      file.contents = Buffer.from(result);
 
-    // console.log(datauri.content);
-
-    return cb(null, file);
+      cb(null, file);
+    });
   };
 
   const toClipboard = (file, enc, cb) => {
-    const copyPaste = require('copy-paste');
-
     if (file.isDirectory() || file.isStream()) {
       return cb();
     }
@@ -218,13 +214,13 @@ const uploadTask = gulp.series(() => {
   };
 
   const run = () => {
-    return gulp.src(argv._).on('error', showError)
-      .pipe($.if(file => !argv.raw && /\.(js|css|less|scss|sass)$/i.test(file.path), $.sourcemaps.init()))
-      .pipe($.if(isMulti, $.concat(getConcatName())))
+    return gulp.src(argv._, { encoding: false }).on('error', showError)
+      .pipe(gulpIf(file => !argv.raw && /\.(js|css|less|scss|sass)$/i.test(file.path), gulpSourceMaps.init()))
+      .pipe(gulpIf(isMulti, gulpConcat(getConcatName())))
 
-      .pipe($.if(/\.(htm|html)$/i, html(argv)))
-      .pipe($.if(file => argv.compress && /\.(htm|html)$/i.test(file.path), inlineCompress()))
-      .pipe($.if(file => argv.compress && /\.(htm|html)$/i.test(file.path), htmlmin({
+      .pipe(gulpIf(/\.(htm|html)$/i, html(argv)))
+      .pipe(gulpIf(file => argv.compress && /\.(htm|html)$/i.test(file.path), inlineCompress()))
+      .pipe(gulpIf(file => argv.compress && /\.(htm|html)$/i.test(file.path), htmlmin({
         collapseBooleanAttributes: true,
         removeComments: true,
         removeScriptTypeAttributes: true,
@@ -234,20 +230,20 @@ const uploadTask = gulp.series(() => {
         removeEmptyAttributes: true
       })).on('error', showError))
 
-      .pipe($.if(file => argv.compress && /\.(png|jpg|jpeg|gif|svg)$/i.test(file.path), $.imageminChangba([
-        $.imageminChangba.gifsicle({ interlaced: true, optimizationLevel: 3 }),
-        $.imageminChangba.jpegtran({ progressive: true }),
-        $.imageminChangba.optipng({ optimizationLevel: 7, autoInterlacedMinSize: 1024 * 50 })
+      .pipe(gulpIf(file => argv.compress && /\.(png|jpg|jpeg|gif|svg)$/i.test(file.path), gulpImagemin([
+        gifsicle({ interlaced: true, optimizationLevel: 3 }),
+        mozjpeg({ progressive: true }),
+        optipng({ optimizationLevel: 7, autoInterlacedMinSize: 1024 * 50 })
       ], { silent: true })).on('error', showError))
 
-      .pipe($.if(file => argv.babel && /\.js$/i.test(file.path), $.babel({
+      .pipe(gulpIf(file => argv.babel && /\.js$/i.test(file.path), gulpBabel({
         cwd: __dirname,
         babelrc: false,
         compact: false,
-        plugins: babelPlugins,
         presets: [
           [
-            require.resolve('@babel/preset-env', { paths: [__dirname] }), {
+            '@babel/preset-env',
+            {
               modules: false,
               targets: { browsers }
             }
@@ -255,31 +251,31 @@ const uploadTask = gulp.series(() => {
         ]
       })).on('error', showError))
 
-      .pipe($.if(file => argv.compress && argv.iife && /\.js$/i.test(file.path), wrapper({
+      .pipe(gulpIf(file => argv.compress && argv.iife && /\.js$/i.test(file.path), wrapper({
         header: '+function() {',
         footer: '}()'
       })).on('error', showError))
 
-      .pipe($.if(file => argv.compress && argv.iife && /\.js$/i.test(file.path), $.sourcemaps.write({ addComment: false })))
+      .pipe(gulpIf(file => argv.compress && argv.iife && /\.js$/i.test(file.path), gulpSourceMaps.write({ addComment: false })))
 
-      .pipe($.if(file => argv.compress && /\.js$/i.test(file.path), terser({
+      .pipe(gulpIf(file => argv.compress && /\.js$/i.test(file.path), terser({
         ie8: true,
         safari10: true,
         compress: {
           drop_console: true
         }
       })).on('error', showError))
-      .pipe($.if(file => argv.compress && /\.js$/i.test(file.path), $.sourcemaps.write({ addComment: false })))
+      .pipe(gulpIf(file => argv.compress && /\.js$/i.test(file.path), gulpSourceMaps.write({ addComment: false })))
 
-      .pipe($.if(file => argv.obfuscate && /\.js$/i.test(file.path), javascriptObfuscator({ compact: true })))
+      .pipe(gulpIf(file => argv.obfuscate && /\.js$/i.test(file.path), javascriptObfuscator({ compact: true })))
 
-      .pipe($.if(file => argv.less && /\.less$/i.test(file.path), less()).on('error', showError))
-      .pipe($.if(file => argv.less && /\.less$/i.test(file.path), $.sourcemaps.write({ addComment: false })))
+      .pipe(gulpIf(file => argv.less && /\.less$/i.test(file.path), less()).on('error', showError))
+      .pipe(gulpIf(file => argv.less && /\.less$/i.test(file.path), gulpSourceMaps.write({ addComment: false })))
 
-      .pipe($.if(file => argv.sass && /\.(scss|sass)$/i.test(file.path), sass({ outputStyle: 'expanded' })).on('error', sass.logError))
-      .pipe($.if(file => argv.sass && /\.(scss|sass)$/i.test(file.path), $.sourcemaps.write({ addComment: false })))
+      .pipe(gulpIf(file => argv.sass && /\.(scss|sass)$/i.test(file.path), sass({ style: 'expanded' })).on('error', sass.logError))
+      .pipe(gulpIf(file => argv.sass && /\.(scss|sass)$/i.test(file.path), gulpSourceMaps.write({ addComment: false })))
 
-      .pipe($.if(file => argv.compress && /\.(css|less|scss|sass)$/i.test(file.path), $.postcss([ use({
+      .pipe(gulpIf(file => argv.compress && /\.(css|less|scss|sass)$/i.test(file.path), gulpPostcss([ use({
         modules: [ 'postcss-pxtorem' ],
         options: {
           'postcss-pxtorem': pxtoremDefault
@@ -294,14 +290,14 @@ const uploadTask = gulp.series(() => {
       }), autoprefixer({
         overrideBrowserslist: browsers
       }) ])))
-      .pipe($.if(file => argv.compress && /\.(css|less|scss|sass)$/i.test(file.path), $.sourcemaps.write({ addComment: false })))
+      .pipe(gulpIf(file => argv.compress && /\.(css|less|scss|sass)$/i.test(file.path), gulpSourceMaps.write({ addComment: false })))
 
   };
 
   if (argv.dest) {
     return run()
-      .pipe($.if(!!argv.base64, through2.obj({ maxConcurrency: 8 }, toBase64)))
-      .pipe($.if(!!argv.name, $.rename(argv.name)))
+      .pipe(gulpIf(!!argv.base64, through2.obj({ maxConcurrency: 8 }, toBase64)))
+      .pipe(gulpIf(!!argv.name, gulpRename(argv.name)))
       .pipe(gulp.dest(argv.dest)).on('data', (file) => {
         if (argv.outputSimple) {
           console.log(chalk.green(file.path));
@@ -315,9 +311,9 @@ const uploadTask = gulp.series(() => {
   }
   else {
     return run()
-      .pipe($.if(!!argv.base64, through2.obj({ maxConcurrency: 8 }, toBase64)))
-      .pipe($.if(!!argv.base64, through2.obj({ maxConcurrency: 8 }, toClipboard)))
-      .pipe($.if(!argv.base64, oss.upload(aliossOptions, argv.outputSimple))).on('end', () => {
+      .pipe(gulpIf(!!argv.base64, through2.obj({ maxConcurrency: 8 }, toBase64)))
+      .pipe(gulpIf(!!argv.base64, through2.obj({ maxConcurrency: 8 }, toClipboard)))
+      .pipe(gulpIf(!argv.base64, oss.upload(aliossOptions, argv.outputSimple))).on('end', () => {
         !argv.outputSimple && log(chalk.cyan('done.'));
       });
   }
@@ -438,7 +434,7 @@ else {
         refreshTask();
       }
       else {
-        yargs.showHelp('log');
+        parsedYargs.showHelp('log');
       }
     }
     else {
@@ -446,6 +442,6 @@ else {
     }
   }
   else {
-    yargs.showHelp('log');
+    parsedYargs.showHelp('log');
   }
 }

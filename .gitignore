@@ -71,3 +71,4 @@ build/*.json
 package-lock.json
 
 .vscode/
+*.local
