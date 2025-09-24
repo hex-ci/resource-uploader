@@ -2,6 +2,28 @@
   "name": "resource-uploader",
   "version": "2.0.0",
   "description": "一站式资源上传和处理工具",
+  "keywords": [
+    "resource-uploader",
+    "upload",
+    "image-processing",
+    "compression",
+    "minification",
+    "gulp",
+    "alioss",
+    "aliyun",
+    "build-tool",
+    "frontend",
+    "assets",
+    "optimization",
+    "sass",
+    "less",
+    "obfuscation",
+    "cdn",
+    "imagemin",
+    "terser",
+    "cssnano",
+    "html-minifier"
+  ],
   "author": "Hex <hex@codeigniter.org.cn>",
   "main": "index.js",
   "repository": "https://github.com/hex-ci/resource-uploader",
@@ -91,5 +113,11 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.4",
     "eslint": "^8.57.1"
-  }
+  },
+  "files": [
+    "index.js",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ]
 }
