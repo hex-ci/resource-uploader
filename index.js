@@ -26,8 +26,8 @@ import gulpImagemin, { gifsicle, mozjpeg, optipng } from 'gulp-imagemin';
 import gulpBabel from 'gulp-babel';
 import gulpSourceMaps from 'gulp-sourcemaps';
 import gulpPostcss from 'gulp-postcss';
+import use from 'postcss-use-plus';
 
-import use from './lib/postcss-use.js';
 import oss from './lib/alioss.js';
 import html from './lib/html.js';
 import inlineCompress from './lib/inline-compress.js';
@@ -276,7 +276,8 @@ const uploadTask = gulp.series(() => {
       .pipe(gulpIf(file => argv.sass && /\.(scss|sass)$/i.test(file.path), sass({ style: 'expanded' })).on('error', sass.logError))
       .pipe(gulpIf(file => argv.sass && /\.(scss|sass)$/i.test(file.path), gulpSourceMaps.write({ addComment: false })))
 
-      .pipe(gulpIf(file => argv.compress && /\.(css|less|scss|sass)$/i.test(file.path), gulpPostcss([ use({
+      .pipe(gulpIf(file => argv.compress && /\.(css|less|scss|sass)$/i.test(file.path), gulpPostcss([ use.default({
+        ruleName: 'postcss-use',
         modules: [ 'postcss-pxtorem' ],
         options: {
           'postcss-pxtorem': pxtoremDefault
