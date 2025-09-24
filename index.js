@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import gulp from 'gulp';
 import path from 'path';
 import fs from 'fs';
@@ -44,7 +45,7 @@ const version = pkg.version;
 const browsers = pkg.browserslist;
 const pxtoremDefault = pkg.pxtorem;
 
-const parsedYargs = yargs(process.argv.slice(2)).usage('用法: $0 [命令] [选项] 文件')
+const parsedYargs = yargs(hideBin(process.argv)).usage('用法: $0 [命令] [选项] 文件')
   .command('refresh <URL>', '刷新已存在的 OSS 资源缓存')
   .option('h', {
     alias: 'help',
